@@ -1,10 +1,7 @@
 package com.easy_bytes_spring_security.EazyBytes_Spring_Security.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
@@ -12,10 +9,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "customer")
+@ToString
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(unique = true)
     private String email;
     private String pwd;
     @Column(name = "role")
