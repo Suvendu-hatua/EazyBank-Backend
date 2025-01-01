@@ -2,16 +2,10 @@ package com.easy_bytes_spring_security.EazyBytes_Spring_Security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -20,21 +14,13 @@ public class ProjectSecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests
+        http.csrf(csrf->csrf.disable())
+                .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/myAccount", "/myBalance", "/myLoans", "/myCards").authenticated()
-                .requestMatchers("/notices", "/contact", "/error").permitAll());
+                .requestMatchers("/notices", "/contact", "/error","/register").permitAll());
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("user").password("{noop}EazyBytes@12345").authorities("read").build();
-        UserDetails admin = User.withUsername("admin")
-                .password("{bcrypt}$2a$12$88.f6upbBvy0okEa7OfHFuorV29qeK.sVbB9VQ6J6dWM1bW6Qef8m")
-                .authorities("admin").build();
-        return new InMemoryUserDetailsManager(user, admin);
     }
 
     @Bean
@@ -46,9 +32,9 @@ public class ProjectSecurityConfig {
      * From Spring Security 6.3 version
      * @return
      */
-    @Bean
-    public CompromisedPasswordChecker compromisedPasswordChecker() {
-        return new HaveIBeenPwnedRestApiPasswordChecker();
-    }
+//    @Bean
+//    public CompromisedPasswordChecker compromisedPasswordChecker() {
+//        return new HaveIBeenPwnedRestApiPasswordChecker();
+//    }
 
 }
